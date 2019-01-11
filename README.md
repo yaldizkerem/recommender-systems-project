@@ -1,7 +1,7 @@
 # Installation
 
 ```bash
-pip install sklearn
+pip install -r requirements.txt
 ```
 
 # Usage
