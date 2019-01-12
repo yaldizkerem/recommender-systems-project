@@ -1,0 +1,74 @@
+
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+    $.getScript( "https://www.gstatic.com/charts/loader.js", function() {
+      if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) 
+      {
+         google.charts.load('current', {'packages':['corechart']});
+      }
+
+      google.charts.setOnLoadCallback(drawChart_Hits_Rate_Comparison);
+    });
+    
+    function drawChart_Hits_Rate_Comparison() {
+        var dataArr = [['Top-N', 'Length=3', 'Length=5', 'Length=7'], [10, 8.28941063727839, 3.0666027791087687, 2.731193100143747], [20, 14.470531863919502, 6.851940584571155, 6.756109247724005], [30, 19.741255390512695, 9.24772400574988, 8.768567321514135], [40, 23.430761859127934, 12.889314805941543, 12.889314805941543], [50, 26.832774317201725, 15.62050790608529, 15.812170579779588], [60, 29.803545759463347, 19.45376137997125, 19.45376137997125], [70, 32.91806420699569, 22.80785816962147, 22.232870148538574], [80, 36.2721609966459, 26.689027311931003, 26.25778629611883], [90, 38.811691423095354, 28.79731672256828, 28.653569717297557], [100, 41.063727839003356, 30.234786775275513, 30.09103977000479]];
+        var grTitle = 'Hits Rate Comparison';
+        var height = 600;
+        var width = 1000;
+        var logScaleFlag = false;
+        var vAxisTitle = 'Hits Rate';
+        var vAxisOpt;
+        if(logScaleFlag)
+        {
+            vAxisOpt = { title: vAxisTitle, logScale: true, format: 'scientific'};
+        }
+        else
+        {
+            vAxisOpt = { title: vAxisTitle };
+        }
+
+        var options = {
+            width: width,
+            height: height,
+            explorer: { actions: ['dragToZoom', 'rightClickToReset'], maxZoomIn: 0.01 },
+            curveType: 'function',
+            title: grTitle,
+            titleTextStyle: { fontSize: 18, bold: true },
+            hAxis: { title: dataArr[0][0] },
+            vAxis: vAxisOpt,
+            
+        };
+
+        var data = new google.visualization.DataTable();
+        var csvOut = "data:text/csv;charset=utf-8";
+        // Add column headers
+        for (var j = 0; j < dataArr[0].length; j++)
+        {
+            data.addColumn('number',dataArr[0][j]);
+            csvOut += ',' + dataArr[0][j];
+        }
+        csvOut += '\n';
+
+        // Add columns
+        for (var i = 1; i < dataArr.length; i++)
+        {
+            data.addRow(dataArr[i]);
+            csvOut += dataArr[i].join(",") + '\n';
+        }
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_Hits_Rate_Comparison'));
+
+        chart.draw(data, options);
+        document.getElementById('pic_div_Hits_Rate_Comparison').innerHTML = '<a href="' + chart.getImageURI() + '" download="'+grTitle+'.png">Download Figure</a>'
+        document.getElementById('csvFileDl_Hits_Rate_Comparison').innerHTML = '<a href="' + encodeURI(csvOut) + '" download="'+grTitle+'.csv">Download CSV</a>'
+    }
+    </script>
+</head>
+<body>
+    <div id="chart_div_Hits_Rate_Comparison"></div>
+    <div id="pic_div_Hits_Rate_Comparison"></div>
+    <div id="csvFileDl_Hits_Rate_Comparison"></div>
+</body>
+</html>
