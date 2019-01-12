@@ -22,31 +22,33 @@ itemItem = pd.DataFrame(data=itemUser.T).corr()
 adjacencyMatrix = pd.concat([pd.DataFrame(data=userUser), pd.DataFrame(data=data.values)], axis=1)
 adjacencyMatrix = pd.concat([adjacencyMatrix, pd.concat([pd.DataFrame(data=data.T.values), pd.DataFrame(data=itemItem)], axis=1)])
 
-adjacencyMatrix = np.dot(np.dot(adjacencyMatrix, adjacencyMatrix), adjacencyMatrix)
-resultMatrix = adjacencyMatrix[:len(userUser),len(userUser):]
+hitRates = [[],[],[],[],[],[],[],[],[],[]]
 
-suggestions = {}
-hitRates = []
-for top in range(1, 11):
-    for index, row in enumerate(np.argsort(resultMatrix, axis=1)[:, :(-10 * top - 1):-1]):
-        suggestions[data.index.values[index]] = data.columns[row].values
-    hit = miss = 0
-    for item in dataSample[['user', 'movie']].values:
-        try:
-            if item[1] in suggestions[item[0]]: hit+=1
-            else: miss+=1
-        except:
-            pass
-    hitRates.append(hit/(float(hit)+miss)*100)
+for length in range(3):
+    adjacencyMatrix = np.dot(np.dot(adjacencyMatrix, adjacencyMatrix), adjacencyMatrix)
+    resultMatrix = adjacencyMatrix[:len(userUser),len(userUser):]
+
+    suggestions = {}
+    for top in range(1, 11):
+        for index, row in enumerate(np.argsort(resultMatrix, axis=1)[:, :(-10 * top - 1):-1]):
+            suggestions[data.index.values[index]] = data.columns[row].values
+        hit = miss = 0
+        for item in dataSample[['user', 'movie']].values:
+            try:
+                if item[1] in suggestions[item[0]]: hit+=1
+                else: miss+=1
+            except:
+                pass
+        hitRates[top - 1].append(hit / (float(hit) + miss) * 100)
 
 from gpcharts import figure
 
 hitFigure = figure(title = 'Hits Rate Comparison', ylabel = 'Hits Rate')
 xValues = ['Top-N'] + range(10,101,10)
-yValues = [['Length=3']]
+yValues = [['Length=3', 'Length=5', 'Length=7']]
 
 for hit in hitRates:
-    yValues += [[hit]]
+    yValues += [hit]
 
-hitFigure.scatter(xValues, yValues)
+hitFigure.plot(xValues, yValues)
       
