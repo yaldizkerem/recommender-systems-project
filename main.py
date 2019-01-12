@@ -5,18 +5,13 @@ import numpy as np
 data = pd.read_csv('u.data', sep='\t', names=['user', 'movie', 'rate', 'timestamp'])
 
 dataSample = data.sample(frac=0.1)
-dataFiveStars = dataSample.loc[dataSample['rate'] != 5]
+dataSample = dataSample.loc[dataSample['rate'] == 5]
 data.drop(dataSample.index, inplace=True)
-data = data.append(dataFiveStars)
-dataSample.drop(dataFiveStars.index, inplace=True)
 
-data = data.pivot(index='user', columns='movie', values='rate')
+data = data.pivot(index='user', columns='movie', values='rate').fillna(0)
 
-dataFilled = data.fillna(0)
-data.fillna(0, inplace=True)
-
-userItem = PCA(n_components = 5).fit_transform(dataFilled)
-itemUser = PCA(n_components = 5).fit_transform(dataFilled.T)
+userItem = PCA(n_components = 5).fit_transform(data)
+itemUser = PCA(n_components = 5).fit_transform(data.T)
 
 data.replace(to_replace=[3, 4, 5], value=1j, inplace=True)
 data.replace(to_replace=[1, 2], value=-1j, inplace=True)
@@ -31,18 +26,27 @@ adjacencyMatrix = np.dot(np.dot(adjacencyMatrix, adjacencyMatrix), adjacencyMatr
 resultMatrix = adjacencyMatrix[:len(userUser),len(userUser):]
 
 suggestions = {}
+hitRates = []
+for top in range(1, 11):
+    for index, row in enumerate(np.argsort(resultMatrix, axis=1)[:, :(-10 * top - 1):-1]):
+        suggestions[data.index.values[index]] = data.columns[row].values
+    hit = miss = 0
+    for item in dataSample[['user', 'movie']].values:
+        try:
+            if item[1] in suggestions[item[0]]: hit+=1
+            else: miss+=1
+        except:
+            pass
+    hitRates.append(hit/(float(hit)+miss)*100)
 
-for index, row in enumerate(np.argsort(resultMatrix, axis=1)[:, :-11:-1]):
-    suggestions[data.index.values[index]] = data.columns[row].values
-hit = miss = 0
-for item in dataSample[['user', 'movie']].values:
-    try:
-        if item[1] in suggestions[item[0]]:
-            hit+=1
-        else:
-            miss+=1
-    except:
-        pass
-print("miss: " + str(miss))
-print("hit: " + str(hit))
-print("hit rate: " + str(hit/(float(hit)+miss)*100))
+from gpcharts import figure
+
+hitFigure = figure(title = 'Hits Rate Comparison', ylabel = 'Hits Rate')
+xValues = ['Top-N'] + range(10,101,10)
+yValues = [['Length=3']]
+
+for hit in hitRates:
+    yValues += [[hit]]
+
+hitFigure.scatter(xValues, yValues)
+      
