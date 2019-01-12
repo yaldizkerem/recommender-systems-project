@@ -31,19 +31,19 @@ for length in range(3):
 
     suggestions = {}
     for top in range(1, 11):
+        suggestedMovie = []
         for index, row in enumerate(np.argsort(resultMatrix, axis=1)[:, :(-10 * top - 1):-1]):
             suggestions[data.index.values[index]] = data.columns[row].values
+            suggestedMovie += list(data.columns[row].values)
         hit = miss = 0
-        suggestedMovie = []
         for item in dataSample[['user', 'movie']].values:
-        suggestedMovie.append(item[1])
             try:
                 if item[1] in suggestions[item[0]]: hit+=1
                 else: miss+=1
             except:
                 pass
         hitRates[top - 1].append(hit / (float(hit) + miss) * 100)
-        coverageRates[top - 1].append(len(set(suggestedMovie))/float(len(itemItem)))
+        coverageRates[top - 1].append(len(set(suggestedMovie))/float(len(itemItem)) * 100)
 
 from gpcharts import figure
 
