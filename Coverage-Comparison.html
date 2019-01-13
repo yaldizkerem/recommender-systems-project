@@ -9,16 +9,16 @@
          google.charts.load('current', {'packages':['corechart']});
       }
 
-      google.charts.setOnLoadCallback(drawChart_Hits_Rate_Comparison);
+      google.charts.setOnLoadCallback(drawChart_Coverage_Comparison);
     });
     
-    function drawChart_Hits_Rate_Comparison() {
-        var dataArr = [['Top-N', 'Length=3', 'Length=5', 'Length=7'], [10, 8.237459733087897, 6.120570639668661, 5.476300046019328], [20, 14.312011044638748, 9.61803957662218, 8.881730326737229], [30, 20.018407731247123, 13.529682466635986, 12.195121951219512], [40, 25.724804417855502, 16.244822825586745, 15.968706856879889], [50, 30.00460193281178, 19.926369075011504, 19.23607915324436], [60, 33.77818683847216, 23.055683387022547, 21.629084215370455], [70, 36.26323055683387, 25.54072710538426, 24.298205246203405], [80, 39.392544868844915, 27.88771283939254, 25.86286240220893], [90, 41.509433962264154, 29.958582604693973, 28.624022089277496], [100, 44.36263230556834, 32.30556833870226, 31.201104463874827]];
-        var grTitle = 'Hits Rate Comparison';
+    function drawChart_Coverage_Comparison() {
+        var dataArr = [['Top-N', 'Length=3', 'Length=5', 'Length=7'], [10, 10.70154577883472, 6.064209274673008, 5.410225921521997], [20, 18.608799048751486, 11.058263971462544, 9.512485136741974], [30, 24.910820451843044, 16.34958382877527, 13.436385255648037], [40, 31.272294887039237, 20.74910820451843, 18.549346016646847], [50, 36.206896551724135, 24.55410225921522, 21.759809750297265], [60, 40.36860879904875, 29.48870392390012, 25.505350772889418], [70, 44.1141498216409, 32.81807372175981, 29.310344827586203], [80, 47.08680142687277, 35.96908442330559, 32.99643281807372], [90, 50.11890606420928, 39.47681331747919, 35.6718192627824], [100, 52.97265160523187, 43.281807372175976, 38.763376932223544]];
+        var grTitle = 'Coverage Comparison';
         var height = 600;
         var width = 1000;
         var logScaleFlag = false;
-        var vAxisTitle = 'Hits Rate';
+        var vAxisTitle = 'Coverage';
         var vAxisOpt;
         if(logScaleFlag)
         {
@@ -58,17 +58,17 @@
             csvOut += dataArr[i].join(",") + '\n';
         }
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div_Hits_Rate_Comparison'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_Coverage_Comparison'));
 
         chart.draw(data, options);
-        document.getElementById('pic_div_Hits_Rate_Comparison').innerHTML = '<a href="' + chart.getImageURI() + '" download="'+grTitle+'.png">Download Figure</a>'
-        document.getElementById('csvFileDl_Hits_Rate_Comparison').innerHTML = '<a href="' + encodeURI(csvOut) + '" download="'+grTitle+'.csv">Download CSV</a>'
+        document.getElementById('pic_div_Coverage_Comparison').innerHTML = '<a href="' + chart.getImageURI() + '" download="'+grTitle+'.png">Download Figure</a>'
+        document.getElementById('csvFileDl_Coverage_Comparison').innerHTML = '<a href="' + encodeURI(csvOut) + '" download="'+grTitle+'.csv">Download CSV</a>'
     }
     </script>
 </head>
 <body>
-    <div id="chart_div_Hits_Rate_Comparison"></div>
-    <div id="pic_div_Hits_Rate_Comparison"></div>
-    <div id="csvFileDl_Hits_Rate_Comparison"></div>
+    <div id="chart_div_Coverage_Comparison"></div>
+    <div id="pic_div_Coverage_Comparison"></div>
+    <div id="csvFileDl_Coverage_Comparison"></div>
 </body>
 </html>
