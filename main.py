@@ -40,8 +40,8 @@ for length in range(3):
         hit = miss = 0
         for item in dataSample[['user', 'movie']].values:
             try:
-                if item[1] in suggestions[item[0]]: hit+=1
-                else: miss+=1
+                if item[1] in suggestions[item[0]]: hit += 1
+                else: miss += 1
             except:
                 pass
         hitRates[top - 1].append(hit / (float(hit) + miss) * 100)
@@ -50,16 +50,16 @@ for length in range(3):
 from gpcharts import figure
 
 hitFigure = figure(title = 'Hits Rate Comparison', ylabel = 'Hits Rate')
-xValues = ['Top-N'] + range(10,101,10)
+xValues = ['Top-N']
 yValues = [['Length=3', 'Length=5', 'Length=7']]
 
-for hit in hitRates:
+for index, hit in enumerate(hitRates):
+    xValues += [(index + 1) * 10]
     yValues += [hit]
 
 hitFigure.plot(xValues, yValues)
 
 hitFigure = figure(title = 'Coverage Comparison', ylabel = 'Coverage')
-xValues = ['Top-N'] + range(10,101,10)
 yValues = [['Length=3', 'Length=5', 'Length=7']]
 
 for coverage in coverageRates:
