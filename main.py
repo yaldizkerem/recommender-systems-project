@@ -22,11 +22,13 @@ itemItem = pd.DataFrame(data=itemUser.T).corr()
 adjacencyMatrix = pd.concat([pd.DataFrame(data=userUser), pd.DataFrame(data=data.values)], axis=1)
 adjacencyMatrix = pd.concat([adjacencyMatrix, pd.concat([pd.DataFrame(data=data.T.values).multiply(-1), pd.DataFrame(data=itemItem)], axis=1)])
 
+tempMatrix = np.dot(adjacencyMatrix, adjacencyMatrix)
+
 hitRates = [[],[],[],[],[],[],[],[],[],[]]
 coverageRates = [[],[],[],[],[],[],[],[],[],[]]
 
-for length in range(3):
-    adjacencyMatrix = np.dot(np.dot(adjacencyMatrix, adjacencyMatrix), adjacencyMatrix)
+for length in range(3):    
+    adjacencyMatrix = np.dot(tempMatrix, adjacencyMatrix)
     resultMatrix = adjacencyMatrix[:len(userUser),len(userUser):]
 
     suggestions = {}
