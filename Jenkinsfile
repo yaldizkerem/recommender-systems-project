@@ -29,7 +29,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'pyinstaller --onefile main.py'
+                sh 'pyinstaller3 --onefile main.py'
             }
             post {
                 success {
