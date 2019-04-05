@@ -27,7 +27,7 @@ tempMatrix = np.dot(adjacencyMatrix, adjacencyMatrix)
 hitRates = [[],[],[],[],[],[],[],[],[],[]]
 coverageRates = [[],[],[],[],[],[],[],[],[],[]]
 
-for length in range(3):    
+for length in range(3):
     adjacencyMatrix = np.dot(tempMatrix, adjacencyMatrix)
     resultMatrix = adjacencyMatrix[:len(userUser),len(userUser):]
 
